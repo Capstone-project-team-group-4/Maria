@@ -16,6 +16,7 @@ function App (): ReactElement {
   let updatedUser: User | undefined;
   let inputField: HTMLInputElement | HTMLTextAreaElement | undefined;
   let userAPI: UserAPI | undefined;
+  let userID: string
 
   function updateUser (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -30,6 +31,13 @@ function App (): ReactElement {
     userAPI = new UserAPI ();
     userAPI.registerUser (user);
     event.preventDefault ();
+  }
+
+  function deleteUser (event: MouseEvent<HTMLButtonElement | MouseEvent>){
+    event.preventDefault ();
+    userAPI = new UserAPI ();
+    userID = user.userid;
+    userAPI.deleteUser(userID);
   }
 
   return (
@@ -110,6 +118,17 @@ function App (): ReactElement {
               </Link>
             </Grid>
           </Grid>
+        </form>
+        <form>
+          <button 
+          type = "button"
+          //id = "delete"
+          onClick = {(event) => {
+            deleteUser (event);
+          }}
+          >
+            Delete User
+          </button>
         </form>
       </div>
     </Container>
