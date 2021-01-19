@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -20,30 +22,44 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author roboc
  */
-@CrossOrigin (origins = "*")
+@CrossOrigin(origins = "*")
 @RestController
 public class UserController {
-    
+
     private UserRepository userRepository;
 
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-    
-    @PostMapping ("/users")
-    @ResponseStatus (HttpStatus.CREATED)
-    @Transactional (propagation = Propagation.REQUIRES_NEW)
-    public void createUser (@RequestBody User user){
-            String userid;
-            boolean userAlreadyExist;
-            
-            userid = user.getUserid();
-            userAlreadyExist = userRepository.existsById(userid);
-            if(userAlreadyExist == true){
-                throw new RuntimeException();
-            }
-            else{
-                userRepository.save(user);
-            }
+
+    @PostMapping("/users")
+    @ResponseStatus(HttpStatus.CREATED)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void createUser(@RequestBody User user) {
+        String userid;
+        boolean userAlreadyExist;
+
+        userid = user.getUserid();
+        userAlreadyExist = userRepository.existsById(userid);
+        if (userAlreadyExist == true) {
+            throw new RuntimeException();
+        } else {
+            userRepository.save(user);
+        }
+    }
+
+    @DeleteMapping("/users/{userid}")
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void deleteUser(@PathVariable String userid) {
+        boolean userAlreadyExist;
+
+        userAlreadyExist = userRepository.existsById(userid);
+        if (userAlreadyExist == true) {
+            userRepository.deleteById(userid);
+        } else {
+            throw new RuntimeException();
+
+        }
     }
 }
