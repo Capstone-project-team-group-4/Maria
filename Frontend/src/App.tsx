@@ -1,3 +1,4 @@
+import React, { ChangeEvent, MouseEvent, ReactElement, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -7,8 +8,30 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
+import { User } from './model/User';
+import { UserAPI } from './common/service/UserAPI';
 
-function App() {
+function App (): ReactElement {
+  let [user, setUser] = useState<User> (new User ());
+  let updatedUser: User | undefined;
+  let inputField: HTMLInputElement | HTMLTextAreaElement | undefined;
+  let userAPI: UserAPI | undefined;
+
+  function updateUser (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): User {
+    inputField = event.target;
+    updatedUser = user;
+    updatedUser[inputField.name as keyof User] = inputField.value;
+    return updatedUser;
+  } 
+  
+  function signUp (event: MouseEvent<HTMLButtonElement | MouseEvent>){
+    userAPI = new UserAPI ();
+    userAPI.registerUser (user);
+    event.preventDefault ();
+  }
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -21,30 +44,38 @@ function App() {
         </Typography>
         <form noValidate>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
-                autoComplete="fname"
-                name="firstName"
+                autoComplete="userID"
+                name="userid"
                 variant="outlined"
                 required
                 fullWidth
-                id="firstName"
-                label="First Name"
+                id="userid"
+                label="User ID"
+                // value = {user.userID}
                 autoFocus
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
+                onChange = {(event) => {
+                  setUser (updateUser (event));
+                }}
               />
             </Grid>
             <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="username"
+                label="User Name"
+                type="text"
+                id="username"
+                autoComplete="User-name"
+                onChange = {(event) => {
+                  setUser (updateUser (event));
+                }}
+              />
+            </Grid>
+            {/* <Grid item xs={12}>
               <TextField
                 variant="outlined"
                 required
@@ -52,21 +83,12 @@ function App() {
                 id="email"
                 label="Email Address"
                 name="email"
-                autoComplete="email"
+                autoComplete="Email-address"
+                onChange = {(event) => {
+                  setUser (updateUser (event));
+                }}
               />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
-            </Grid>
+            </Grid> */}
             <Grid item xs={12}>
             </Grid>
           </Grid>
@@ -75,6 +97,9 @@ function App() {
             fullWidth
             variant="contained"
             color="primary"
+            onClick = {(event) => {
+              signUp (event);
+            }}
           >
             Sign Up
           </Button>
