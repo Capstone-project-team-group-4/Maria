@@ -12,14 +12,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @author roboc
  */
-public interface UserRepository extends JpaRepository<User, String>{
+public interface UserRepository extends JpaRepository<User, Integer>{
 
     @Override
     public User save(User user);
 
     @Override
-    public boolean existsById(String userid);
+    public boolean existsById(Integer userID);
 
     @Override
-    public void deleteById(String userid); 
+    public void deleteById(Integer userID); 
 }

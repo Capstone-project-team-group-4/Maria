@@ -11,6 +11,8 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -28,58 +30,57 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author roboc
  */
 @Entity
-@Table(name = "Role", catalog = "MariaDB", schema = "dbo")
+@Table(name = "Role", catalog = "Mocking-DB", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Role.findAll", query = "SELECT r FROM Role r"),
-    @NamedQuery(name = "Role.findByRoleid", query = "SELECT r FROM Role r WHERE r.roleid = :roleid"),
-    @NamedQuery(name = "Role.findByName", query = "SELECT r FROM Role r WHERE r.name = :name")})
+    @NamedQuery(name = "Role.findByRoleID", query = "SELECT r FROM Role r WHERE r.roleID = :roleID"),
+    @NamedQuery(name = "Role.findByRoleName", query = "SELECT r FROM Role r WHERE r.roleName = :roleName")})
 public class Role implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "RoleID", nullable = false)
+    private Integer roleID;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 100)
-    @Column(name = "Role_id", nullable = false, length = 100)
-    private String roleid;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 100)
-    @Column(name = "Name", nullable = false, length = 100)
-    private String name;
+    @Size(min = 1, max = 500)
+    @Column(name = "RoleName", nullable = false, length = 500)
+    private String roleName;
     @JoinTable(name = "UserRole", joinColumns = {
-        @JoinColumn(name = "Role_id", referencedColumnName = "Role_id", nullable = false)}, inverseJoinColumns = {
-        @JoinColumn(name = "User_id", referencedColumnName = "User_id", nullable = false)})
+        @JoinColumn(name = "RoleID", referencedColumnName = "RoleID", nullable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "UserID", referencedColumnName = "UserID", nullable = false)})
     @ManyToMany(fetch = FetchType.LAZY)
     private List<User> userList;
 
     public Role() {
     }
 
-    public Role(String roleid) {
-        this.roleid = roleid;
+    public Role(Integer roleID) {
+        this.roleID = roleID;
     }
 
-    public Role(String roleid, String name) {
-        this.roleid = roleid;
-        this.name = name;
+    public Role(Integer roleID, String roleName) {
+        this.roleID = roleID;
+        this.roleName = roleName;
     }
 
-    public String getRoleid() {
-        return roleid;
+    public Integer getRoleID() {
+        return roleID;
     }
 
-    public void setRoleid(String roleid) {
-        this.roleid = roleid;
+    public void setRoleID(Integer roleID) {
+        this.roleID = roleID;
     }
 
-    public String getName() {
-        return name;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 
     @XmlTransient
@@ -94,7 +95,7 @@ public class Role implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (roleid != null ? roleid.hashCode() : 0);
+        hash += (roleID != null ? roleID.hashCode() : 0);
         return hash;
     }
 
@@ -105,7 +106,7 @@ public class Role implements Serializable {
             return false;
         }
         Role other = (Role) object;
-        if ((this.roleid == null && other.roleid != null) || (this.roleid != null && !this.roleid.equals(other.roleid))) {
+        if ((this.roleID == null && other.roleID != null) || (this.roleID != null && !this.roleID.equals(other.roleID))) {
             return false;
         }
         return true;
@@ -113,7 +114,7 @@ public class Role implements Serializable {
 
     @Override
     public String toString() {
-        return "com.Son.Maria.model.Role[ roleid=" + roleid + " ]";
+        return "com.Son.Maria.model.Role[ roleID=" + roleID + " ]";
     }
     
 }

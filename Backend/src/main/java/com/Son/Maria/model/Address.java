@@ -10,13 +10,14 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -25,48 +26,40 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author roboc
  */
 @Entity
-@Table(name = "Address", catalog = "MariaDB", schema = "dbo")
+@Table(name = "Address", catalog = "Mocking-DB", schema = "dbo")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Address.findAll", query = "SELECT a FROM Address a"),
-    @NamedQuery(name = "Address.findByAddressid", query = "SELECT a FROM Address a WHERE a.addressid = :addressid"),
+    @NamedQuery(name = "Address.findByAddressID", query = "SELECT a FROM Address a WHERE a.addressID = :addressID"),
     @NamedQuery(name = "Address.findByCity", query = "SELECT a FROM Address a WHERE a.city = :city")})
 public class Address implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 100)
-    @Column(name = "Address_id", nullable = false, length = 100)
-    private String addressid;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 100)
-    @Column(name = "City", nullable = false, length = 100)
+    @Column(name = "AddressID", nullable = false)
+    private Integer addressID;
+    @Size(max = 500)
+    @Column(name = "City", length = 500)
     private String city;
-    @JoinColumn(name = "User_id", referencedColumnName = "User_id", nullable = false)
+    @JoinColumn(name = "UserID", referencedColumnName = "UserID", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private User userid;
+    private User userID;
 
     public Address() {
     }
 
-    public Address(String addressid) {
-        this.addressid = addressid;
+    public Address(Integer addressID) {
+        this.addressID = addressID;
     }
 
-    public Address(String addressid, String city) {
-        this.addressid = addressid;
-        this.city = city;
+    public Integer getAddressID() {
+        return addressID;
     }
 
-    public String getAddressid() {
-        return addressid;
-    }
-
-    public void setAddressid(String addressid) {
-        this.addressid = addressid;
+    public void setAddressID(Integer addressID) {
+        this.addressID = addressID;
     }
 
     public String getCity() {
@@ -77,18 +70,18 @@ public class Address implements Serializable {
         this.city = city;
     }
 
-    public User getUserid() {
-        return userid;
+    public User getUserID() {
+        return userID;
     }
 
-    public void setUserid(User userid) {
-        this.userid = userid;
+    public void setUserID(User userID) {
+        this.userID = userID;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (addressid != null ? addressid.hashCode() : 0);
+        hash += (addressID != null ? addressID.hashCode() : 0);
         return hash;
     }
 
@@ -99,7 +92,7 @@ public class Address implements Serializable {
             return false;
         }
         Address other = (Address) object;
-        if ((this.addressid == null && other.addressid != null) || (this.addressid != null && !this.addressid.equals(other.addressid))) {
+        if ((this.addressID == null && other.addressID != null) || (this.addressID != null && !this.addressID.equals(other.addressID))) {
             return false;
         }
         return true;
@@ -107,7 +100,7 @@ public class Address implements Serializable {
 
     @Override
     public String toString() {
-        return "com.Son.Maria.model.Address[ addressid=" + addressid + " ]";
+        return "com.Son.Maria.model.Address[ addressID=" + addressID + " ]";
     }
     
 }
